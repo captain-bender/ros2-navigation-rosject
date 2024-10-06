@@ -7,6 +7,9 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(spot_recorder REQUIRED)
+find_package(geometry_msgs REQUIRED)
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
@@ -15,6 +18,21 @@ find_package(rosidl_default_generators REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
   "srv/MyServiceMessage.srv"
+)
+
+add_executable(server src/spots_to_file2.cpp)
+ament_target_dependencies(server rclcpp spot_recorder geometry_msgs)                     
+
+# add_executable(client src/add_two_ints_client.cpp)
+# ament_target_dependencies(client rclcpp tutorial_interfaces)                      
+
+install(TARGETS server
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+install(DIRECTORY
+  launch
+  DESTINATION share/${PROJECT_NAME}/
 )
 
 if(BUILD_TESTING)
